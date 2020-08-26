@@ -20,7 +20,7 @@ router.get('/:key',(req,res,next)=>{
      Obj.find({key:key}).sort({timestamp: -1}).select({value:1,_id:0})
     .then(function (docs) {
         console.log(docs)
-        res.status(200).json({objects:docs[0]})
+        res.status(200).json({object:docs[0]})
     }).catch((err)=>res.status(500).json({error:err}))
 })
 
@@ -31,20 +31,24 @@ router.get('/:key/:timestamp',(req,res,next)=>{
     Obj.findOne({key:key,timestamp:timestamp}).select({value:1,_id:0})
     .then((docs)=>{
         console.log(docs)
-        res.status(200).json({objects:docs})
+        res.status(200).json({object:docs})
     })
     .catch((err)=>res.status(500).json({error:err}))
 })
  
 
 router.post('/',(req,res,next)=>{
+    // console.log(req.body)
+const key = Object.keys(req.body)[0];
+const value = Object.values(req.body)[0];
+
         const object =new Obj ({
             _id:mongoose.Types.ObjectId(),
-            key:req.body.key,
-            value:req.body.value,
+            key:key,
+            value:value,
             timestamp: Math.floor(Date.now() / 1000)
         })
-        console.log(object);
+         console.log(object);
          object.save()
        .then((doc)=>{
             res.status(200).json({objects:doc})
